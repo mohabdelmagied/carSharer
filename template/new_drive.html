@@ -1,0 +1,111 @@
+<html>
+<head><title>CarSharer</title></head>
+<style type="text/css">
+* {
+   margin:0;
+   padding:0;
+}
+
+body{
+   text-align:center;
+   background: #efe4bf none repeat scroll 0 0;
+}
+
+#wrapper{
+   width:960px;
+   margin:0 auto;
+   text-align:left;
+   background-color: #fff;
+   border-radius: 0 0 10px 10px;
+   padding: 20px;
+   box-shadow: 1px -2px 14px rgba(0, 0, 0, 0.4);
+}
+
+#header{
+ color: #fff;
+ background-color: #2c5b9c;
+ height: 3.5em;
+ padding: 1em 0em 1em 1em;
+
+}
+
+#site{
+    background-color: #fff;
+    padding: 20px 0px 0px 0px;
+}
+.centerBlock{
+	margin:0 auto;
+}
+.box {
+  background-color: lightgrey;
+  width: 80%;
+  border: 15px solid gray;
+  padding: 50px;
+  margin: 20px;
+}
+.center {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 50%;
+}
+.button {
+  background-color: #4CAF50; /* Green */
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+}
+div.settings {
+    display:grid;
+    grid-template-columns: max-content max-content;
+    grid-gap:5px;
+}
+div.settings label       { text-align:right; }
+div.settings label:after { content: ":"; }
+.grid {
+  display: grid;
+  grid-template-columns: 400px 500px;
+  grid-gap: 10px;
+}
+</style>
+<body>
+    <div id="header">
+    <h1> CarSharer </h1>
+    <h2> Eine Fahrt erstellen </h2>
+    </div>
+    <div class="settings">
+          <form action="{{url_for('new_drive')}}" method="post">
+              <input name="id" type="hidden" value="{{id}}">
+        <label>Von</label> <input type="text" name="von"/> <br/>
+        <label>Nach</label> <input type="text" name="nach"/> <br/>
+        <label>Maximale Kapazität</label> <input type="text" name="maxKap"/> <br/>
+        <label>Fahrtkosten</label> <input type="text" name="fahrtkosten"/> <br/>
+        <label>Transportmittel</label> <input type="radio" id="auto" name="transportmittel" value="1">
+                         <label for="auto">Auto</label>
+                         <input type="radio" id="bus" name="transportmittel" value="2">
+                         <label for="bus">Bus</label>
+                         <input type="radio" id="kleintransporter" name="transportmittel" value="3">
+                         <label for="kleintransporter">Kleintransporter</label><br/>
+         <label>Fahrtdatum</label> <input type="date" id="fahrtdatum" name="fahrtdatum"><br/>
+              <label>Fahrtzeit</label> <input type="time" id="fahrtzeit" name="fahrtzeit"><br/>
+         <label>Beschreibung</label> <textarea id="beschreibung" name="beschreibung" rows="4" cols="50"></textarea><br/>
+        <button type="submit" class="button">Fahrt erstellen</button>
+        </form>
+        <form action="{{url_for('carShare')}}" method="get">
+            <div class="button" style="text-align: left;">
+                <button name="main_page" style="padding: 0.5cm 1cm; background-color: #2c5b9c;color: white"> Home Page </button>
+            </div>
+        </form>
+        {%if response%}
+            Deine Fahrt wurde erfolgreich hinzugefügt! :)
+        {%endif%}
+
+        {%if error%}
+            {{error}}
+        {%endif%}
+    </div>
+</body>

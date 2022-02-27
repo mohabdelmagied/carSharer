@@ -1,0 +1,118 @@
+<html>
+<head><title>CarSharer</title>
+<style type="text/css">
+* {
+   margin:0;
+   padding:0;
+}
+
+body{
+   text-align:center;
+   background: #efe4bf none repeat scroll 0 0;
+}
+
+#wrapper{
+   width:960px;
+   margin:0 auto;
+   text-align:left;
+   background-color: #fff;
+   border-radius: 0 0 10px 10px;
+   padding: 20px;
+   box-shadow: 1px -2px 14px rgba(0, 0, 0, 0.4);
+}
+
+#header{
+ color: #fff;
+ background-color: #2c5b9c;
+ height: 3.5em;
+ padding: 1em 0em 1em 1em;
+
+}
+
+#site{
+    background-color: #fff;
+    padding: 20px 0px 0px 0px;
+}
+.centerBlock{
+	margin:0 auto;
+}
+.box {
+  background-color: lightgrey;
+  width: 300px;
+  border: 15px solid gray;
+  padding: 50px;
+  margin: 20px;
+}
+.grid-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+.center {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 50%;
+}
+
+.button {
+  background-color: #4CAF50; /* Green */
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+}
+</style>
+
+<body>
+	<div id="wrapper">
+		<div id="header">
+		<h1> CarSharer </h1>
+		</div>
+		<div id="site">
+			<div class="grid-container">
+			<form action="{{url_for('view_search')}}" method="post">
+				<label>Start</label> <input type="text" name="startort"/> <br/>
+				<label>Ziel</label> <input type="text" name="zielort"/> <br/>
+				<label>Datum</label> <input type="datetime-local" name="datum"/> <br/>
+              	<input name="bid" type="hidden" value="{{bid}}">
+				<input type="submit" class="button" value="Search"/>
+			</form>
+				{%if error%}
+					{{error}}
+				{%endif%}
+            {%if values != "" and not error%}
+		    <h2> VerfÃ¼gbare Fahrten </h2>
+				{%for val in values%}
+				<div class="box">
+					<form action="{{url_for('view_drive')}}" method="get">
+						<input name="id" type="hidden" value={{val['fid']}}/>
+						<input name="bid" type="hidden" value={{val['bid']}}/>
+						<input type="submit" value="Mehr Infos" class="button"/>
+					</form>
+				<h2>Offene Fahrt:</h2>
+				{%if val["transportmittel"] == 1%}
+					<div text-align="center">
+					<img src= "{{ url_for('static', filename = '/auto.png') }}" width="64" height="64" >
+						</div>
+				{%endif%}
+				{%if val["transportmittel"] == 2%}
+					<img src= "{{ url_for('static', filename = '/bus.png') }}" width="64" height="64">
+				{%endif%}
+				{%if val["transportmittel"] == 3%}
+					<img src= "{{ url_for('static', filename = '/kleintransporter.png') }}" width="64" height="64">
+				{%endif%}
+				<p>Startort: {{val['startort']}}</p>
+				<p>Zielort: {{val['zielort']}}</p>
+				<p>Fahrtkosten: {{val['fahrtkosten']}}</p>
+				<p>Status: {{val['status']}}</p>
+				</div>
+				{%endfor%}
+			</div>
+            {%endif%}
+		</div>
+	</div>
+</body>
+</html>

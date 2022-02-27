@@ -1,0 +1,203 @@
+<html>
+<head><title>View drive</title>
+<style type="text/css">
+* {
+   margin:0;
+   padding:0;
+}
+
+body{
+   text-align:center;
+   background: #efe4bf none repeat scroll 0 0;
+}
+
+#wrapper{
+   width:960px;
+   margin:0 auto;
+   text-align:left;
+   background-color: #fff;
+   border-radius: 0 0 10px 10px;
+   padding: 20px;
+   box-shadow: 1px -2px 14px rgba(0, 0, 0, 0.4);
+}
+
+#header{
+ color: #fff;
+ background-color: #2c5b9c;
+ height: 3.5em;
+ padding: 1em 0em 1em 1em;
+
+}
+.drive_body {
+	text-align: center;
+}
+.site{
+    background-color: #fff;
+    padding: 20px 0px 0px 0px;
+}
+.message{
+    background-color: antiquewhite;
+    color: #2c5b9c;
+    max-width: 10cm;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 0.4cm;
+}
+.centerBlock{
+	margin:0 auto;
+}
+th,td{
+    padding: 0.5cm;
+    alignment: left;
+}
+footer {
+    margin: 1cm auto;
+    background-color: white;
+    width: 80%;
+    padding: 0.5cm;
+
+}
+.buttonForm {
+  background-color: #4CAF50; /* Green */
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+}
+</style>
+
+<body>
+    {% if driveDetails %}
+	<div id="wrapper">
+		<div id="header">
+            <h1> carSharer Website </h1>
+            </div>
+            <div class="site" style="text-align: center">
+			<p>
+				<h2> Information about drive </h2>
+			</p>
+		</div>
+        {% if message %}
+        <p class="message">
+            {{ message }}
+        </p>
+        {% endif %}
+        <form method="post">
+            <div class="drive_body" style="text-align: center;">
+                <table rules="rows" style="text-align: center; margin-left: auto;margin-right: auto">
+                    {%if driveDetails["transportmittel"] == 1%}
+						<img src= "{{ url_for('static', filename = '/auto.png') }}" width="64" height="64">
+					{%endif%}
+					{%if driveDetails["transportmittel"] == 2%}
+						<img src= "{{ url_for('static', filename = '/bus.png') }}" width="64" height="64">
+					{%endif%}
+					{%if driveDetails["transportmittel"] == 3%}
+						<img src= "{{ url_for('static', filename = '/kleintransporter.png') }}" width="64" height="64">
+					{%endif%}
+
+                    <tr>
+                        <td>Anbieter: </td>
+                        <td> {{ driveDetails["anbieter"]}} </td>
+                    </tr>
+                    <tr>
+                        <td>Zeit: </td>
+                        <td>{{ driveDetails["fahrtdatumzeit"]}}</td>
+                    </tr>
+                    <tr>
+                        <td>Startort: </td>
+                        <td>{{ driveDetails["startort"]}}</td>
+                    </tr>
+                    <tr>
+                        <td>Zielort: </td>
+                        <td>{{ driveDetails["zielort"]}}</td>
+                    </tr>
+                    <tr>
+                        <td>freie Plaetze: </td>
+                        <td>{{ driveDetails["freiePlaetze"]}}</td>
+                    </tr>
+                    <tr>
+                        <td>Fahrtkosten: </td>
+                        <td>{{ driveDetails["fahrtkosten"]}}</td>
+                    </tr>
+                    <tr>
+                        <td>Status: </td>
+                        <td>{{ driveDetails["status"]}}</td>
+                    </tr>
+                    <tr>
+                        <td>Beschreibung: </td>
+                        <td colspan="2">{{ driveDetails["beschreibung"]}}</td>
+                    </tr>
+
+                </table>
+            </div>
+		    <div style="text-align: right">
+				<div class="button" >
+					<button name="Loeschen" value="{{ driveDetails['fid']}}" style="padding: 0.5cm; background-color: red;color: white;font-size: 15px"> Fahrt Loeschen </button>
+				</div>
+		    </div>
+            <select name="anzahl" id="anzahl">
+  <option value="1">One</option>
+  <option value="2">Two</option>
+</select>
+            <div style="text-align: right">
+				<div class="button" >
+					<button name="reservieren" value="{{ driveDetails['fid']}}" style="padding: 0.5cm; background-color: #2c5b9c;color: white;font-size: 15px"> Reservieren </button>
+				</div>
+		    </div>
+        {% if ratings %}
+        </form>
+        <div id="site" style="text-align: center">
+			<p>
+				<h2> Ratings </h2>
+			</p>
+		</div>
+        <form method="post">
+            <div id="drive_body" style="text-align: center;">
+                <table rules="rows" style="text-align: center; margin-left: auto;margin-right: auto">
+                    <tr>
+                        <th>Textnachricht</th>
+                        <th>Erstellungsdatum</th>
+                        <th>rating</th>
+                    </tr>
+                    {% for rating in ratings["textnachricht"] %}
+                        <tr>
+                            <td>{{ratings["textnachricht"][loop.index0]}}</td>
+                            <td>{{ratings["erstellungsdatum"][loop.index0]}}</td>
+                            <td>{{ratings["rating"][loop.index0]}}</td>
+                        </tr>
+                    {%endfor%}
+                </table>
+                <td>Durchschnittliche Bewertung: {{ratings["avg_rating"]}}</td>
+            </div>
+        </form>
+    {% endif %}
+        <form action="{{url_for('new_rating')}}" method="GET">
+                <input name="bid" type="hidden" value={{driveDetails['bid']}}/>
+                <input name="id" type="hidden" value={{driveDetails['fid']}}/>
+                <div class="button" >
+                    <input type="submit" value="bewerten" class="buttonForm"/>
+                </div>
+            </form>
+        {% if error %}
+        <p class="message" style="color: red;">
+            {{ error }}
+        </p>
+        {% endif %}
+        <form action="{{url_for('carShare')}}" method="get">
+            <div class="button" style="text-align: left;">
+                <button name="main_page" style="padding: 0.5cm 1cm; background-color: #2c5b9c;color: white"> Home Page </button>
+            </div>
+        </form>
+    {% endif %}
+    </div>
+    <footer>
+        <div style="background-color: #2c5b9c; padding: 0.1cm">
+            <h3 style="color: white"> Universität Duisburg-Essen  </h3>
+            <p style="color: white"> Generated by Mohamed Abdelmagied </p>
+        </div>
+    </footer>
+    </body>
+</html>
